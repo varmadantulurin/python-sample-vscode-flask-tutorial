@@ -26,8 +26,8 @@ steps:
     script: |        
       tag='pyflask:v$(Build.BuildNumber)'
       docker build -t $tag -f Dockerfile .
-      docker tag myapp:v$(Build.BuildNumber) $(DOCKERREPO)/default-docker-virtual/$(tag
-      docker push $(DOCKERREPO)/default-docker-virtual/myapp:v$(Build.BuildNumber)
+      docker tag myapp:v$(Build.BuildNumber) $(DOCKERREPO)/default-docker-virtual/$(tag)
+      docker push $(DOCKERREPO)/default-docker-virtual/$tag
       
 - task: Docker@2
   inputs:

@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- test-ado
+
+pool:
+  vmImage: ubuntu-latest
+
+  
+steps:
+
+- task: DockerInstaller@0
+  inputs:
+    dockerVersion: '17.09.0-ce'
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'jfrog-docker'
+    command: 'login'
+
+- task: CmdLine@2
+  inputs:
+    script: |        
+      tag='pyflask:v$(Build.BuildNumber)'
+      docker build -t $tag -f Dockerfile .
+      docker tag myapp:v$(Build.BuildNumber) $(DOCKERREPO)/default-docker-virtual/$(tag
+      docker push $(DOCKERREPO)/default-docker-virtual/myapp:v$(Build.BuildNumber)
+      
+- task: Docker@2
+  inputs:
+    containerRegistry: 'jfrog-docker'
+    command: 'logout'
